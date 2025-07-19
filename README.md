@@ -14,6 +14,8 @@ Este proyecto es una aplicación web interactiva desarrollada en React que prese
 - **✨ Interfaz moderna**: Diseño responsive con efectos mágicos y popups informativos
 - **📱 Adaptable**: Compatible con dispositivos móviles y tablets
 - **🎨 UI/UX intuitiva**: Navegación fluida con efectos visuales atractivos
+- **🧩 Arquitectura modular**: Componentes separados siguiendo principios SOLID
+- **🔧 CSS Modules**: Estilos encapsulados y sin conflictos entre componentes
 
 ### 🛠️ Tecnologías Utilizadas
 
@@ -46,18 +48,109 @@ npm run build
 
 ```
 src/
-├── components/           # Componentes React reutilizables
-│   ├── home/            # Componente principal con navegación
-│   ├── class-card/      # Tarjetas de información de clases
-│   └── spells/          # Componentes de hechizos y popups
-├── data/                # Base de datos JSON
-│   ├── spells.json      # Datos completos de hechizos
-│   └── spells-by-class.json # Relación clase-hechizos
-├── assets/              # Recursos estáticos
-│   ├── classes/         # Iconos de clases
-│   └── spells/          # Iconos de hechizos
-└── App.jsx             # Componente raíz
+├── components/                    # Componentes React modulares
+│   ├── home/                     # Componente coordinador principal
+│   │   ├── home.jsx             # Lógica de coordinación
+│   │   └── home.module.css      # Estilos del componente home
+│   ├── header/                   # Componente de encabezado
+│   │   ├── header.jsx           # Búsqueda y filtros (posición fija)
+│   │   └── header.module.css    # Estilos del header
+│   ├── menu/                     # Componente de navegación lateral
+│   │   ├── menu.jsx             # Sidebar con clases mágicas
+│   │   └── menu.module.css      # Estilos del menú lateral
+│   ├── class-card/               # Tarjetas de información de clases
+│   │   ├── class-card.jsx       # Componente de tarjeta
+│   │   └── class-card.module.css # Estilos de las tarjetas
+│   ├── spells-info/              # Tarjetas compactas de hechizos
+│   │   ├── spell-info.jsx       # Cards clickeables
+│   │   └── spell-info.module.css # Estilos de cards
+│   └── spell-info-details/       # Modal de información detallada
+│       ├── spell-info-details.jsx # Popup con datos completos
+│       └── spell-info-details.module.css # Estilos del popup
+├── data/                         # Base de datos JSON
+│   ├── spells.json              # Datos completos de hechizos
+│   └── spells-by-class.json     # Relación clase-hechizos
+├── assets/                       # Recursos estáticos
+│   ├── classes/                 # Iconos de clases mágicas
+│   └── spells/                  # Iconos de hechizos (310+ íconos)
+└── App.jsx                      # Componente raíz de la aplicación
 ```
+
+---
+
+## 🏗️ Refactorización Arquitectural
+
+### Evolución del Proyecto
+
+Este proyecto ha evolucionado desde una aplicación monolítica hacia una **arquitectura modular** siguiendo principios de desarrollo profesional:
+
+#### **🔄 Fase 1: Aplicación Inicial**
+- Componente único con múltiples responsabilidades
+- CSS mezclado con lógica de presentación
+- Dificultad para mantenimiento y testing
+
+#### **🧩 Fase 2: Separación de Componentes (Actual)**
+- **Principio de Responsabilidad Única**: Cada componente tiene una función específica
+- **CSS Modules**: Estilos encapsulados para cada componente
+- **Props Interface**: Comunicación clara entre componentes
+
+### 🏛️ Arquitectura de Componentes
+
+```
+App.jsx (Estado Global)
+    ↓
+Home.jsx (Coordinador)
+    ├── Header.jsx (Búsqueda/Filtros)
+    ├── Menu.jsx (Navegación Lateral)  
+    ├── ClassCard.jsx (Tarjetas de Clases)
+    └── SpellInfo.jsx (Cards de Hechizos)
+            ↓
+        SpellInfoDetails.jsx (Popup Modal)
+```
+
+#### **🔧 Separación Implementada:**
+
+1. **Header Component** (`components/header/`)
+   - **Responsabilidad**: Búsqueda y filtros con posicionamiento fijo
+   - **Props**: `searchTerm`, `levelFilter`, `typeFilter`, `onSearch`, `onLevelFilter`, `onTypeFilter`
+   - **CSS**: `position: fixed`, `z-index: 1000`
+
+2. **Menu Component** (`components/menu/`)
+   - **Responsabilidad**: Navegación lateral con selección de clases
+   - **Props**: `selectedClass`, `onClassSelect`, `classCounts`
+   - **Funcionalidades**: Scroll suave, estados activos, hover effects
+
+3. **SpellInfoDetails Component** (`components/spell-info-details/`)
+   - **Responsabilidad**: Modal popup con información detallada
+   - **Props**: `spell`, `isVisible`, `onClose`
+   - **Características**: Overlay, animaciones mágicas, click-outside-to-close
+
+### ✅ Beneficios de la Refactorización
+
+#### **Mantenibilidad**
+- **Before**: Cambiar el header requería modificar `home.jsx` completo
+- **After**: Modificaciones aisladas en `components/header/header.jsx`
+
+#### **Reutilización**
+- **Before**: Lógica duplicada entre componentes
+- **After**: Componentes independientes y reutilizables
+
+#### **Testing**
+- **Before**: Tests complejos de componentes monolíticos
+- **After**: Tests unitarios específicos por funcionalidad
+
+#### **Escalabilidad**
+- **Before**: Archivo único de 300+ líneas
+- **After**: Componentes de 50-100 líneas cada uno
+
+### 🎯 Principios Aplicados
+
+- **Single Responsibility Principle (SRP)**: Un componente, una responsabilidad
+- **Don't Repeat Yourself (DRY)**: Lógica compartida en funciones utilitarias
+- **Props Interface Design**: Comunicación clara y tipada
+- **CSS Encapsulation**: Estilos modulares sin conflictos
+
+---
 
 ---
 
@@ -108,6 +201,48 @@ const [spells, setSpells] = useState([])
 const [searchTerm, setSearchTerm] = useState('')
 const [levelFilter, setLevelFilter] = useState('all')
 const [typeFilter, setTypeFilter] = useState('all')
+
+// Flujo de datos hacia componentes hijos
+return (
+  <Home 
+    spells={filteredSpells}
+    searchTerm={searchTerm}
+    selectedClass={selectedClass}
+    levelFilter={levelFilter}
+    typeFilter={typeFilter}
+    onSearch={setSearchTerm}
+    onClassSelect={setSelectedClass}
+    onLevelFilter={setLevelFilter}
+    onTypeFilter={setTypeFilter}
+  />
+);
+```
+
+#### 3. **Props Drilling Pattern**
+
+Los datos fluyen hacia abajo y las acciones hacia arriba a través de la jerarquía de componentes:
+
+```jsx
+// Home.jsx - Distribuye props a componentes especializados
+<Header 
+  searchTerm={searchTerm}
+  levelFilter={levelFilter}
+  typeFilter={typeFilter}
+  onSearch={onSearch}
+  onLevelFilter={onLevelFilter}
+  onTypeFilter={onTypeFilter}
+/>
+
+<Menu 
+  selectedClass={selectedClass}
+  onClassSelect={onClassSelect}
+  classCounts={classCounts}
+/>
+
+<SpellInfo 
+  spell={spell}
+  // El popup maneja su propio estado local
+/>
 ```
 
 ### 📊 Gestión de Filtros Reactivos
@@ -136,18 +271,66 @@ const selectedClassSpells = getFilteredSpells(); // Se recalcula automáticament
 
 ### 🔧 Patrones de Estado Implementados
 
-#### 1. **Estado Centralizado**
-- Todos los filtros principales se manejan en `App.jsx`
-- Los datos fluyen hacia abajo via props
-- Las acciones suben via callbacks
+#### 1. **Estado Centralizado (App.jsx)**
+- Todos los filtros principales se manejan en el componente raíz
+- Los datos fluyen hacia abajo via props (uni-directional data flow)
+- Las acciones suben via callbacks para mantener la fuente única de verdad
 
-#### 2. **Estado Local para UI**
-- Popups y modales manejan su propio estado de visibilidad
-- Efectos visuales usan estado local para animaciones
+#### 2. **Estado Local para UI (SpellInfoDetails)**
+```jsx
+// SpellInfo.jsx - Estado local para popup
+const [isPopupVisible, setIsPopupVisible] = useState(false);
 
-#### 3. **Estado Derivado**
-- Los contadores se calculan dinámicamente desde los datos filtrados
-- No duplicamos información, la derivamos de la fuente única de verdad
+const handleCardClick = () => {
+  setIsPopupVisible(true); // Controla solo la visibilidad del modal
+};
+
+// SpellInfoDetails.jsx - Componente especializado
+export default function SpellInfoDetails({ spell, isVisible, onClose }) {
+  // Recibe props del padre, maneja su propia lógica interna
+  const handleOverlayClick = () => {
+    if (onClose) onClose();
+  };
+}
+```
+
+#### 3. **Estado Derivado y Cálculos Reactivos**
+```jsx
+// Home.jsx - Cálculos que se actualizan automáticamente
+const filteredSpells = useMemo(() => {
+  return spells.filter(spell => {
+    const matchesName = spell.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesLevel = levelFilter === 'all' || spell.level.toString() === levelFilter;
+    const matchesType = typeFilter === 'all' || spell.type === typeFilter;
+    return matchesName && matchesLevel && matchesType;
+  });
+}, [spells, searchTerm, levelFilter, typeFilter]);
+
+// Los contadores se derivan automáticamente de los datos filtrados
+const classCounts = useMemo(() => {
+  const counts = {};
+  classes.forEach(className => {
+    counts[className] = getSpellsByClass(className, filteredSpells).length;
+  });
+  return counts;
+}, [filteredSpells]);
+```
+
+#### 4. **Component Communication Patterns**
+
+```jsx
+// Patrón padre-hijo con props
+<Header onSearch={handleSearch} searchTerm={searchTerm} />
+
+// Patrón callback para comunicación hijo-padre
+const handleSearch = (newSearchTerm) => {
+  setSearchTerm(newSearchTerm); // Estado sube al padre
+};
+
+// Estado compartido entre hermanos via padre común
+<Menu selectedClass={selectedClass} />
+<ClassCard selectedClass={selectedClass} />
+```
 
 ### 🤔 Preguntas Frecuentes Resueltas
 
@@ -199,12 +382,35 @@ const selectedClassSpells = getFilteredSpells(); // Se recalcula automáticament
 
 ## 🏆 Logros Técnicos
 
-- ✅ Gestión eficiente de estados compartidos
-- ✅ Componentes reutilizables y modulares
-- ✅ Filtrado en tiempo real con múltiples criterios
-- ✅ UI responsiva y accesible
-- ✅ Efectos visuales avanzados con CSS puro
-- ✅ Arquitectura escalable y mantenible
+### 🧩 Arquitectura Modular
+- ✅ **Separación de responsabilidades**: Cada componente tiene una función específica
+- ✅ **Props Interface Design**: Comunicación clara entre componentes
+- ✅ **CSS Modules**: Estilos encapsulados sin conflictos globales
+- ✅ **Component Isolation**: Tests y desarrollo independientes
+
+### 🔄 Gestión de Estado
+- ✅ **Estado centralizado**: Gestión eficiente desde App.jsx
+- ✅ **Lifting State Up**: Estados compartidos entre componentes hermanos
+- ✅ **Derived State**: Cálculos reactivos automáticos
+- ✅ **Local State**: Estados específicos para UI y animaciones
+
+### 🎨 Interfaz y Experiencia
+- ✅ **Diseño responsivo**: Grid adaptable según dispositivo
+- ✅ **Header fijo**: Navegación accesible con `position: fixed`
+- ✅ **Popup modales**: Sistema de overlay con z-index management
+- ✅ **Animaciones mágicas**: Efectos visuales con CSS puro
+
+### 🔧 Características Técnicas
+- ✅ **Filtrado en tiempo real**: Múltiples criterios simultáneos
+- ✅ **Hot Module Replacement**: Desarrollo con recarga instantánea
+- ✅ **Fallback de imágenes**: Sistema robusto local + remoto
+- ✅ **Click-outside-to-close**: UX intuitiva en modales
+
+### 📈 Escalabilidad y Mantenimiento
+- ✅ **Componentes reutilizables**: Modulares y configurables via props
+- ✅ **Arquitectura extensible**: Fácil agregar nuevas funcionalidades
+- ✅ **Código limpio**: Principios SOLID aplicados
+- ✅ **Separación de concerns**: Lógica, presentación y estilos separados
 
 ## 📚 Recursos de Aprendizaje
 

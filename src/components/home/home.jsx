@@ -14,7 +14,7 @@ export default function Home({
   showSpells = false ,
   spells = [],
   searchTerm = '',
-  onSearchChange,
+  onSearchChange= () => {},
   levelFilter = 'all',
   onLevelFilterChange = () => {},
   typeFilter = 'all',
