@@ -1,0 +1,46 @@
+/* Clase base para la tarjeta */
+.classCard {
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 0;
+  background-color: #f9f9f9;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+/* Estilo para las imágenes de clase */
+.classImage {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+  object-fit: cover;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.classImage:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.class-card-title {
+    font-size: 1.5em;
+    margin: 0;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #ccc;
+}
+
+.class-card-content {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: none;
+}
