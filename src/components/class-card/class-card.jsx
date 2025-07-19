@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './class-card.module.css';
-import SpellInfo from '../spells/spell-info.jsx';
+import SpellInfo from '../spells-info/spell-info.jsx';
 
 // Img importadas
 import bardImg from '../../assets/classes/bard.png';

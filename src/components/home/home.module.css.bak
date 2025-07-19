@@ -7,6 +7,79 @@
     margin: 0;       
 }
 
+/* Sidebar Navigation */
+.sidebar {
+  width: 320px; 
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 20px 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed; 
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+  z-index: 99;
+}
+
+.sidebarHeader {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid #34495e;
+  margin-bottom: 20px;
+}
+
+.sidebarTitle {
+  color: #3498db;
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.sidebarSubtitle {
+  color: #bdc3c7;
+  font-size: 0.9rem;
+  margin: 5px 0 0;
+}
+
+.classList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.classItem {
+  padding: 12px 20px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.classItem:hover {
+  background-color: #34495e;
+  border-left-color: #3498db;
+}
+
+.classItem.active {
+  background-color: #34495e;
+  border-left-color: #e74c3c;
+  color: #fff;
+}
+
+.classIcon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+  border-radius: 4px;
+}
+
+.className {
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
 /* Main Content Area */
 .mainContent {
   flex: 1;
@@ -18,6 +91,7 @@
   min-height: 100vh; 
 }
 
+/* Header with Search and Filters */
 /* Content Area */
 .contentArea {
   flex: 1;
@@ -38,8 +112,8 @@
   width: 100%;
   max-width: none;
   box-sizing: border-box;
-  min-width: 0;
-  flex-shrink: 0;
+  min-width: 0; /* Prevent flex shrinking based on content */
+  flex-shrink: 0; /* Don't shrink based on content */
 }
 
 .welcomeTitle {
@@ -111,36 +185,16 @@
   letter-spacing: 0.5px;
 }
 
-/* Class Cards Section */
-.classCardsSection {
-  margin-bottom: 30px;
-  width: 100%;
-  max-width: none;
-}
-
-/* Spells Grid - 4 Column Layout */
-.spellsContainer {
-  padding: 20px 0;
-  width: 100%;
-  z-index: 1;
-}
-
-.spellsGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 20px;
-  align-items: start;
-  justify-items: center;
-  z-index: 1;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .homeContainer {
     flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
   }
   
   .mainContent {
@@ -153,13 +207,16 @@
   }
   
   .welcomeTitle {
-    font-size: 1.5rem;
-    margin-left: 15px;
-    margin-right: 15px;
+    font-size: 1.5rem;  
   }
   
   .welcomeSection {
     padding: 20px 15px;     
+  }
+  
+  .welcomeTitle {
+    margin-left: 15px;
+    margin-right: 15px;
   }
   
   .welcomeSubtitle {
@@ -175,12 +232,6 @@
   .statsSection {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 15px;  
-  }
-
-  .spellsGrid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    padding: 0 15px;
   }
 }
 
@@ -208,9 +259,52 @@
     margin-left: 60px;
     margin-right: 60px;
   }
+  
+  .statsSection {
+    max-width: none;    
+    width: 100%;    
+  }
 }
 
-/* Responsive grid para mobile pequeño */
+/* Estilos específicos para ClassCard dentro de welcomeSection */
+.welcomeSection :global(.classCard) {
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  border: none;
+  background-color: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* Spells Grid - 4 Column Layout */
+.spellsContainer {
+  padding: 20px 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.spellsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+  align-items: start;
+  justify-items: center;
+  z-index: 1;
+}
+
+/* Responsive grid */
+@media (max-width: 768px) {
+  .spellsGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 0 15px;
+  }
+}
+
 @media (max-width: 480px) {
   .spellsGrid {
     grid-template-columns: repeat(2, 1fr);
