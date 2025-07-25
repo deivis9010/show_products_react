@@ -18,11 +18,13 @@ export default function Home({
   levelFilter = 'all',
   onLevelFilterChange = () => {},
   typeFilter = 'all',
-  onTypeFilterChange = () => {}
-
+  onTypeFilterChange = () => {},
+  spellByClassData = [],
+  loading = false
+  
 }) {
   const totalSpells = spellsData.length;
-  const totalClasses = 6; // Número fijo de clases disponibles
+  const totalClasses = spellByClassData.length || 6; // Número dinámico de clases disponibles
   
   // Calcular hechizos filtrados correctamente
 const getFilteredSpells = () => {
@@ -52,6 +54,7 @@ const getFilteredSpells = () => {
       <Menu 
         selectedClass={selectedClass}
         onClassSelect={onClassSelect}
+        classes={spellByClassData}
       />
 
       {/* Main Content */}
@@ -97,16 +100,26 @@ const getFilteredSpells = () => {
             <div className={styles.statCard}>
               <div className={styles.statNumber}>{selectedClassSpells}</div>
               <div className={styles.statLabel}>
-                {selectedClass ? `${selectedClass} Hechizos` : 'Hechizos Seleccionados'}
+                {selectedClass ? `${selectedClass} Hechizos válidos` : 'Hechizos Seleccionados'}
               </div>
             </div>
+            
           </section>
+
+          <div id='ShowSelectedClass' style={{ height: '110px' }} ></div>
+
               {/* Class Cards Section */}
             <section className={styles.classCardsSection}>
                  {showSpells ? <ClassCard name={selectedClass} /> : <></>}
                  
             </section>
-            <div id='ShowSelectedClass' style={{ height: '20px' }} />
+            
+            {loading && (
+              <div className={styles.loadingContainer}>
+                <img src="/Loading.gif" alt="Cargando..." className={styles.loadingSpinner} />
+                <span></span>
+              </div>
+            )}
 
             {/* Spells Card Section */}
             <div className={styles.spellsContainer}>

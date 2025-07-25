@@ -111,6 +111,19 @@
   letter-spacing: 0.5px;
 }
 
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  width: 100%;
+}
+
+.loadingSpinner {
+  width: 320px;
+  height: 320px;
+}
+
 /* Class Cards Section */
 .classCardsSection {
   margin-bottom: 30px;

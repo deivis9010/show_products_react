@@ -1,33 +1,29 @@
 import React, { useState } from 'react'
 
 import './App.css'
-import SpellsData from './data/spells.json'
-import SpellByClassData from './data/spells-by-class.json'
 import Home from './components/home/home.jsx'
+import { useLoadClasses } from './hooks/use-load-classes.js'
+import { useLoadSpellsInfo } from './hooks/use-load-spells-info.js'
 
 
 function App() {
-  
-  const [spellByClassData] = useState(SpellByClassData)
-  const [spellsData] = useState(SpellsData)
+  // Cargar datos de clases desde el hook personalizado
+  const spellByClassData = useLoadClasses();  
   const [selectedClass, setSelectedClass] = useState('')
-  const [spells, setSpells] = useState([])
+  const { spellsData, spells, clearSpells, isLoading } = useLoadSpellsInfo(selectedClass);
   const [showSpells, setShowSpells] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [levelFilter, setLevelFilter] = useState('all')
   const [typeFilter, setTypeFilter] = useState('all')
 
-  const onClickClassCard = (className) => {
-    console.log(`Clicked on ${className}`);
 
-    // Obtengo lista de hechizos por clase (ej. bard [<id1>, <id2>], cleric, etc.)
-    const spellIds = spellByClassData[className];
+ 
+
+
+  const onClickClassCard = async(className) => {
+    console.log(`Clicked on ${className}`);  
     
-    // Obtengo la info de los hechizos segun la lista de IDs de la clase
-    const classSpells = spellsData.filter(spell => spellIds.includes(spell.id));
-    
-    console.log(classSpells);
-    setSpells(classSpells);
+    clearSpells(); // Limpiar los hechizos antes de cargar los nuevos
     setSelectedClass(className);
     setShowSpells(true);
   }
@@ -79,6 +75,7 @@ function App() {
       onLevelFilterChange={handleLevelFilterChange} 
       typeFilter={typeFilter}
       onTypeFilterChange={handleTypeFilterChange}
+      loading={isLoading}
     />
   );
 }

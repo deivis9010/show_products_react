@@ -18,12 +18,14 @@ const classImages = {
   wizard: wizardImg
 };
 
-const classes = ['bard', 'cleric', 'druid', 'sorcerer', 'warlock', 'wizard'];
-
 export default function Menu({
   selectedClass,
-  onClassSelect
+  onClassSelect,
+  classes = []
 }) {
+  
+  // Usar las clases de la API si están disponibles, sino usar el fallback
+  const classesToRender = classes.length > 0 ? classes : ['bard', 'cleric', 'druid', 'sorcerer', 'warlock', 'wizard'];
 
   const handleClassClick = (className) => {
     if (onClassSelect) {
@@ -46,7 +48,7 @@ export default function Menu({
       </div>
       
       <ul className={styles.classList}>
-        {classes.map(className => (
+        {classesToRender.map(className => (
           <li 
             key={className}
             className={`${styles.classItem} ${selectedClass === className ? styles.active : ''}`}
