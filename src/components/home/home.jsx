@@ -12,15 +12,13 @@ export default function Home({
   selectedClass = '', 
   spellsData = [],  
   showSpells = false ,
-  spells = [],
-  searchTerm = '',
-  onSearchChange= () => {},
-  levelFilter = 'all',
-  onLevelFilterChange = () => {},
-  typeFilter = 'all',
+  spells = [], 
+  onSearchChange= () => {},  
+  onLevelFilterChange = () => {},  
   onTypeFilterChange = () => {},
   spellByClassData = [],
-  loading = false
+  loading = false,
+  filters = { term: '', level: 'all', type: 'all' }
   
 }) {
   const totalSpells = spellsData.length;
@@ -32,15 +30,15 @@ const getFilteredSpells = () => {
 
     return spells.filter(spell => {
         // Filtro por nombre
-        const matchesName = spell.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesName = spell.name.toLowerCase().includes(filters.term.toLowerCase());
 
         // Filtro por nivel
         const matchesLevel =
-            levelFilter === 'all' || String(spell.level) === String(levelFilter);
+            filters.level === 'all' || String(spell.level) === String(filters.level);
 
         // Filtro por tipo
         const matchesType =
-            typeFilter === 'all' || spell.type === typeFilter;
+            filters.type === 'all' || spell.type === filters.type;
 
         return matchesName && matchesLevel && matchesType;
     }).length;
@@ -60,13 +58,11 @@ const getFilteredSpells = () => {
       {/* Main Content */}
       <main className={styles.mainContent}>
         {/* Header with Search and Filters */}
-        <Header 
-          searchTerm={searchTerm}
-          onSearchChange={onSearchChange}
-          levelFilter={levelFilter}
+        <Header          
+          onSearchChange={onSearchChange}          
           onLevelFilterChange={onLevelFilterChange}
-          typeFilter={typeFilter}
           onTypeFilterChange={onTypeFilterChange}
+          filters={filters}
         />
 
         {/* Content Area */}

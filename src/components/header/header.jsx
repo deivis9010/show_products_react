@@ -2,12 +2,10 @@ import React from 'react';
 import styles from './header.module.css';
 
 export default function Header({
-  searchTerm,
   onSearchChange,
-  levelFilter,
   onLevelFilterChange,
-  typeFilter,
-  onTypeFilterChange
+  onTypeFilterChange,
+  filters = { term: '', level: 'all', type: 'all' }
 }) {
 
   const handleSearchChange = (e) => {
@@ -38,7 +36,7 @@ export default function Header({
           type="text"
           placeholder="Buscar hechizos..."
           className={styles.searchInput}
-          value={searchTerm}
+          value={filters.term}
           onChange={handleSearchChange}
         />
         
@@ -46,7 +44,7 @@ export default function Header({
           <label className={styles.filterLabel}>Nivel:</label>
           <select 
             className={styles.filterSelect}
-            value={levelFilter}
+            value={filters.level}
             onChange={handleLevelFilterChange}
           >
             <option value="all">Todos los Niveles</option>
@@ -62,7 +60,7 @@ export default function Header({
           <label className={styles.filterLabel}>Tipo:</label>
           <select 
             className={styles.filterSelect}
-            value={typeFilter}
+            value={filters.type}
             onChange={handleTypeFilterChange}
           >
             <option value="all">Todos</option>

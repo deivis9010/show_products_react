@@ -11,13 +11,15 @@ function App() {
   const spellByClassData = useLoadClasses();  
   const [selectedClass, setSelectedClass] = useState('')
   const { spellsData, spells, clearSpells, isLoading } = useLoadSpellsInfo(selectedClass);
-  const [showSpells, setShowSpells] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [levelFilter, setLevelFilter] = useState('all')
-  const [typeFilter, setTypeFilter] = useState('all')
+  //const [showSpells, setShowSpells] = useState(false)
+  // const [searchTerm, setSearchTerm] = useState('')
+  // const [levelFilter, setLevelFilter] = useState('all')
+  // const [typeFilter, setTypeFilter] = useState('all')
+   const [filters, setFilters] = useState({ term: '', level: 'all', type: 'all' })
 
 
- 
+
+ const showSpells = spells.length > 0 && selectedClass
 
 
   const onClickClassCard = async(className) => {
@@ -25,32 +27,32 @@ function App() {
     
     clearSpells(); // Limpiar los hechizos antes de cargar los nuevos
     setSelectedClass(className);
-    setShowSpells(true);
+    //setShowSpells(true);
   }
 
   const handleSearchChange = (value) => {
-    setSearchTerm(value);
+    setFilters(filters => ({ ...filters, term: value }));
   }
   const handleLevelFilterChange = (value) => {
-    setLevelFilter(value);
+    setFilters(filters => ({ ...filters, level: value }));
   }
   const handleTypeFilterChange = (value) => {
-    setTypeFilter(value);
+    setFilters(filters => ({ ...filters, type: value }));
   }
 
   // Filtrar hechizos basado en el término de búsqueda
   // Calcular hechizos filtrados correctamente
   const filteredSpells = spells.filter(spell => {
     // Filtro por nombre
-    const matchesName = spell.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesName = spell.name.toLowerCase().includes(filters.term.toLowerCase());
 
     // Filtro por nivel
     const matchesLevel =
-      levelFilter === 'all' || String(spell.level) === String(levelFilter);
+      filters.level === 'all' || String(spell.level) === String(filters.level);
 
     // Filtro por tipo
     const matchesType =
-      typeFilter === 'all' || spell.type === typeFilter;
+      filters.type === 'all' || spell.type === filters.type;
 
     return matchesName && matchesLevel && matchesType;
   });
@@ -68,14 +70,12 @@ function App() {
       spellsData={spellsData}
       spellByClassData={spellByClassData}
       showSpells={showSpells}
-      spells={filteredSpells}
-      searchTerm={searchTerm}
-      onSearchChange={handleSearchChange}
-      levelFilter={levelFilter}
-      onLevelFilterChange={handleLevelFilterChange} 
-      typeFilter={typeFilter}
+      spells={filteredSpells}      
+      onSearchChange={handleSearchChange}     
+      onLevelFilterChange={handleLevelFilterChange}      
       onTypeFilterChange={handleTypeFilterChange}
       loading={isLoading}
+      filters={filters}
     />
   );
 }
